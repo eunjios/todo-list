@@ -29,13 +29,25 @@ const TodoHeadBlock = styled.div`
 
 function TodoHead() {
   const todos = useTodoState();
+  const undoneTasks = todos.filter(todo => !todo.done);
+
+  const today = new Date();
+  // 년, 월, 일
+  const dateString = today.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  // 요일
+  const dayName = today.toLocaleDateString('ko-KR', { weekday: 'long' });
+
   console.log(todos);
   // return 하지 않으면 에러도 안나는데 렌더링 안되니까 주의하기 
   return (
     <TodoHeadBlock>
-      <h1>2023년 8월 7일</h1>
-      <div className="day">월요일</div>
-      <div className="tasks-left">할 일 2개 남음</div>
+      <h1>{dateString}</h1>
+      <div className="day">{dayName}</div>
+      <div className="tasks-left">할 일 {undoneTasks.length}개 남음</div>
     </TodoHeadBlock>
   );
 }
