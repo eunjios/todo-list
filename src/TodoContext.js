@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, createContext } from "react";
 
 const initialTodos = [
   {
@@ -42,7 +42,25 @@ function TodoReducer(state, action) {
   }
 }
 
+// === 컨텍스트 만들기 ===
+const TodoStateContext = createContext();
+const TodoDispatchContext = createContext();
+
 export function TodoProvider({ children }) {
   const [state, dispatch] = useReducer(TodoReducer, initialTodos);
-  return children;
+  return (
+    // createContext 로 사용할 값 지정하는 법 
+    // 1. Provider 컴포넌트 렌더링
+    // 2. value 설정
+    // 3. 내부에 children 렌더링
+
+    // 외부 컴포넌트에서 useContext 로 사용할 값 지정하는 법
+    // 1. import { TodoStateContext, TodoDispatchContext }
+    // 2. const state = useContext(TodoStateContext) 이런 식으로 지정
+    <TodoStateContext.Provider value={state}>
+      <TodoDispatchContext.Provider value={dispatch}>
+        {children}
+      </TodoDispatchContext.Provider>
+    </TodoStateContext.Provider>
+  );
 }
