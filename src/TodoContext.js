@@ -1,4 +1,4 @@
-import React, { useReducer, createContext } from "react";
+import React, { useReducer, createContext, useContext, useRef } from "react";
 
 const initialTodos = [
   {
@@ -45,22 +45,44 @@ function TodoReducer(state, action) {
 // === 컨텍스트 만들기 ===
 const TodoStateContext = createContext();
 const TodoDispatchContext = createContext();
+const TodoNextIdContext = createContext();
 
 export function TodoProvider({ children }) {
   const [state, dispatch] = useReducer(TodoReducer, initialTodos);
+  const nextId = useRef(4); 
+
   return (
     // createContext 로 사용할 값 지정하는 법 
     // 1. Provider 컴포넌트 렌더링
     // 2. value 설정
     // 3. 내부에 children 렌더링
 
-    // 외부 컴포넌트에서 useContext 로 사용할 값 지정하는 법
+    // 외부 컴포넌트에서 useContext 로 사용할 값 직접 지정하는 법
     // 1. import { TodoStateContext, TodoDispatchContext }
     // 2. const state = useContext(TodoStateContext) 이런 식으로 지정
     <TodoStateContext.Provider value={state}>
       <TodoDispatchContext.Provider value={dispatch}>
-        {children}
+        <TodoNextIdContext.Provider value={nextId}>
+          {children}
+        </TodoNextIdContext.Provider>
       </TodoDispatchContext.Provider>
     </TodoStateContext.Provider>
   );
+}
+
+// === 커스텀 훅 만들기 ===
+// 외부 컴포넌트에서 useTodoState, useTodoDispatch 사용하는 법
+// 1. import { useTodoState, useTodoDispatch }
+// 2. const state = useTodoState();
+//    const dispatch = useTodoDispatch();
+export function useTodoState () {
+  return useContext(TodoStateContext);
+}
+
+export function useTodoDispatch() {
+  return useContext(TodoDispatchContext);
+}
+
+export function useTodoNextId() {
+  return useContext(TodoNextIdContext);
 }
