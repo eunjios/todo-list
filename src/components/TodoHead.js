@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
+import { useTodoState } from "../TodoContext";
 
 const TodoHeadBlock = styled.div`
   padding-top: 48px;
@@ -27,6 +28,8 @@ const TodoHeadBlock = styled.div`
 `;
 
 function TodoHead() {
+  const todos = useTodoState();
+  console.log(todos);
   // return 하지 않으면 에러도 안나는데 렌더링 안되니까 주의하기 
   return (
     <TodoHeadBlock>

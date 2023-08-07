@@ -71,18 +71,33 @@ export function TodoProvider({ children }) {
 }
 
 // === 커스텀 훅 만들기 ===
+// 에러 처리 -> 나중에 실수 및 문제점 찾기 쉬움
+
 // 외부 컴포넌트에서 useTodoState, useTodoDispatch 사용하는 법
 // 1. import { useTodoState, useTodoDispatch }
 // 2. const state = useTodoState();
 //    const dispatch = useTodoDispatch();
 export function useTodoState () {
-  return useContext(TodoStateContext);
+  // TodoProvider로 감싸져야 함 -> 아니면 에러 처리 
+  const context = useContext(TodoStateContext);
+  if (!context) {
+    throw new Error('Cannot find TodoProvider');
+  }
+  return context;
 }
 
 export function useTodoDispatch() {
-  return useContext(TodoDispatchContext);
+  const context = useContext(TodoDispatchContext);
+  if (!context) {
+    throw new Error('Cannot find TodoProvider');
+  }
+  return context;
 }
 
 export function useTodoNextId() {
-  return useContext(TodoNextIdContext);
+  const context = useContext(TodoNextIdContext);
+  if (!context) {
+    throw new Error('Cannot find TodoProvider');
+  }
+  return context;
 }
