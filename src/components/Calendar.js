@@ -43,7 +43,7 @@ const TodoDayCheck = styled.div`
   align-items: center;
   width: 32px;
   height: 32px;
-  border-radius: 28%;
+  border-radius: 32%;
   background-color: ${props => 
     (props.isPast ? '#5F8B58' : '#D9D9D9')
   };
@@ -71,7 +71,7 @@ const TodoDayDate = styled.div`
   text-align: center;
   font-size: 14px;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 600;
   line-height: normal;
 `;
 
