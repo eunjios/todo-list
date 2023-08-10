@@ -25,7 +25,6 @@ const ProfileInfo = styled.div`
 
 const UserName = styled.div`
   color: #000;
-  font-family: Inter;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -34,7 +33,6 @@ const UserName = styled.div`
 
 const UserMessage = styled.div`
   color: #525252;
-  font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
