@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 
 const ProfileContainer = styled.div`
   display: inline-flex;
-  padding: 6px 0px;
+  padding: 26px;
   justify-content: center;
   align-items: center;
   gap: 9px;
