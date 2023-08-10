@@ -20,7 +20,6 @@ const CalendarInfo = styled.div`
 
 const CalendarDate = styled.p`
   color: #000;
-  font-family: Inter;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -31,7 +30,6 @@ const CalendarDone = styled.div`
   display: flex;
   align-items: center;
   color: #000;
-  font-family: Inter;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;

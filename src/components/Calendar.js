@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FaCheck } from 'react-icons/fa';
 
 const days = ["월", "화", "수", "목", "금", "토", "일"];
 
@@ -15,7 +16,6 @@ const CalendarDay = styled.div`
   grid-template-columns: repeat(7, 1fr);
   padding: 10px;
   color: #525252;
-  font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -27,7 +27,6 @@ const CalendarGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   width: 100%;
-  padding: 10px;
 `;
 
 const TodoDay = styled.div`
@@ -39,10 +38,15 @@ const TodoDay = styled.div`
 `;
 
 const TodoDayCheck = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 32px;
   height: 32px;
   border-radius: 28%;
-  background-color: #D9D9D9;
+  background-color: ${props => 
+    (props.isPast ? '#5F8B58' : '#D9D9D9')
+  };
 
   /* 
   TODO:
@@ -53,13 +57,18 @@ const TodoDayCheck = styled.div`
   <div>{남아 있는 할 일 개수}<div>
   {남아 있는 할 일 개수} 가 0 이면 -> check 표시 
   */
+  color: #FFF;
+  text-align: center;
 
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 `;
 
 const TodoDayDate = styled.div`
   color: #000;
   text-align: center;
-  font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
@@ -75,9 +84,13 @@ const Calendar = () => {
   const calendarDates = [];
   for (let i = 1 - firstDayOfWeek; i <= lastDay.getDate(); i++) {
     if (i > 0) {
-      calendarDates.push(i);
+      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+      calendarDates.push({
+        date: i,
+        isPast: date < currentDate,
+      });
     } else {
-      calendarDates.push('');
+      calendarDates.push({date: '', isPast: true});
     }
   }
 
@@ -90,12 +103,14 @@ const Calendar = () => {
         ))}
       </CalendarDay>
       <CalendarGrid>
-        {calendarDates.map((date, index) => (
+        {calendarDates.map((day, index) => (
           <TodoDay key={index}>
-            {date !== '' && (
+            {day.date !== '' && (
               <>
-                <TodoDayCheck />
-                <TodoDayDate>{date}</TodoDayDate>
+                <TodoDayCheck isPast={day.isPast}>
+                  {day.isPast ? <FaCheck /> : "2"}
+                </TodoDayCheck>
+                <TodoDayDate>{day.date}</TodoDayDate>
               </>
             )}
           </TodoDay>
