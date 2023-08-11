@@ -1,6 +1,7 @@
 import React from "react";
 import { styled } from "styled-components";
 import { FaCheck } from 'react-icons/fa';
+import { useTodoDispatch } from "../TodoContextCustom";
 
 const TodoItemContainer = styled.div`
   display: inline-flex;
@@ -19,7 +20,7 @@ const CheckBox = styled.div`
   color: #FFF;
   font-size: 14px;
   background: ${props => (
-    props.done ? '#5F8B58' :'#D9D9D9'
+    props.done ? props.color :'#D9D9D9'
   )};
 `;
 
@@ -32,10 +33,13 @@ const Text = styled.div`
   line-height: normal;
 `;
 
-function TodoItemCustom({ id, done, text }) {
+function TodoItemCustom({ id, done, color, text }) {
+  const dispatch = useTodoDispatch();
+  const onToggle = () => dispatch({ type: 'TOGGLE', id });
+  // const onRemove = () => dispatch({ type: 'ROMOVE', id });
   return (
     <TodoItemContainer>
-      <CheckBox done={done}>
+      <CheckBox done={done} color={color} onClick={onToggle}>
         {done && <FaCheck />}
       </CheckBox>
       <Text>{text}</Text>
@@ -43,4 +47,4 @@ function TodoItemCustom({ id, done, text }) {
   );
 }
 
-export default TodoItemCustom;
+export default React.memo(TodoItemCustom);

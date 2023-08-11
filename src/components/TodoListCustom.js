@@ -3,29 +3,7 @@ import styled from 'styled-components';
 import { BsBoxFill } from 'react-icons/bs';
 import { ReactComponent as PlusButton } from '../assets/PlusButton.svg';
 import TodoItemCustom from "./TodoItemCustom";
-
-const todos = [
-  {
-    id: 1,
-    text: 'UI/UX 디자인 완료',
-    done: true,
-  },
-  {
-    id: 2,
-    text: '컴포넌트 만들기',
-    done: true,
-  },
-  {
-    id: 3,
-    text: '기능 구현하기',
-    done: false,
-  },
-  {
-    id: 4,
-    text: '상태관리',
-    done: false,
-  },
-]
+import { useTodoState } from "../TodoContextCustom";
 
 const TodoListContainer = styled.div`
   display: flex;
@@ -60,24 +38,27 @@ const TodoCategory = styled.div`
 function TodoCategoryButton({ title, color }) {
   return (
     <TodoCategoryContainer>
-    <TodoCategoryBlock>
-      <BsBoxFill />
-      <TodoCategory color={color}>{title}</TodoCategory>
-      <PlusButton />
-    </TodoCategoryBlock>
+      <TodoCategoryBlock>
+        <BsBoxFill />
+        <TodoCategory color={color}>{title}</TodoCategory>
+        <PlusButton />
+      </TodoCategoryBlock>
     </TodoCategoryContainer>
   );
 }
 
 function TodoListCustom() {
+  const todos = useTodoState();
   return (
     <TodoListContainer>
       <TodoCategoryButton title="공부" color="#5F8B58"/>
       {todos.map(todo => (
         <TodoItemCustom 
           key={todo.id}
+          id={todo.id}
           text={todo.text}
           done={todo.done}
+          color={todo.color}
         />
       ))}
       <TodoCategoryButton title="루틴" color="#F38D7F"/>
