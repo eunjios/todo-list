@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { BsBoxFill } from 'react-icons/bs';
 import { ReactComponent as PlusButton } from '../assets/PlusButton.svg';
 import TodoItemCustom from "./TodoItemCustom";
-import { useTodoState } from "../TodoContextCustom";
+import { useDateState, useTodoState } from "../TodoContextCustom";
 
 const TodoListContainer = styled.div`
   display: flex;
@@ -49,7 +49,8 @@ function TodoCategoryButton({ title, color }) {
 
 function TodoListCustom() {
   const todos = useTodoState();
-  const targetTodos = todos.filter(todo => todo.date === '2023. 9. 11.'); // TODO: targetDate
+  const selectedDate = useDateState();
+  const targetTodos = todos.filter(todo => todo.date === selectedDate); // TODO: targetDate
   return (
     <TodoListContainer>
       {targetTodos.map(data => (

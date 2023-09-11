@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FaCheck } from 'react-icons/fa';
 import { useTodoState } from '../TodoContextCustom';
+import { useDateState, useDateUpdate } from '../TodoContextCustom';
 
 const days = ["월", "화", "수", "목", "금", "토", "일"];
 
@@ -30,7 +31,7 @@ const CalendarGrid = styled.div`
   width: 100%;
 `;
 
-const TodoDay = styled.div`
+const TodoDayContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,6 +46,7 @@ const TodoDayCheck = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 32%;
+  cursor: pointer;
   background-color: ${props => 
     (props.$remains !== 0 ? '#5F8B58' : '#D9D9D9')
   };
@@ -76,6 +78,28 @@ const TodoDayDate = styled.div`
   line-height: normal;
 `;
 
+function TodoDay({ fullDate, date, remains }) {
+  const setDate = useDateUpdate();
+  const onDayClick = () => {
+    if (fullDate !== '') {
+      setDate(fullDate);
+    }
+    console.log(fullDate);
+  }
+  return (
+    <TodoDayContainer>
+      {date !== '' && (
+        <>
+          <TodoDayCheck $remains={remains} onClick={onDayClick}>
+            {remains === 0 ? <FaCheck /> : `${remains}`}
+          </TodoDayCheck>
+          <TodoDayDate>{date}</TodoDayDate>
+        </>
+      )}
+    </TodoDayContainer>
+  )
+};
+
 const Calendar = () => {
   const todos = useTodoState();
   const currentDate = new Date();
@@ -89,7 +113,8 @@ const Calendar = () => {
   for (let i = 2 - firstDayOfWeek; i <= lastDay.getDate(); i++) {
     if (i > 0) {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
-      const targetTodos = todos.find(todo => todo.date === date.toLocaleDateString());
+      const dateString = date.toLocaleDateString();
+      const targetTodos = todos.find(todo => todo.date === dateString);
 
       let remains = 0;
       if(targetTodos) {
@@ -102,19 +127,17 @@ const Calendar = () => {
       }
       console.log(remains);
       calendarDates.push({
+        fullDate: dateString,
         date: i,
-        // isPast: date < currentDate, // TODO: isDone 으로 변경 
         remains: remains, // TODO: null 이면 숫자 X
       });
-      // console.log(date.toLocaleDateString());
     } else {
-      calendarDates.push({date: '', remains: 0});
+      calendarDates.push({fullDate: '', date: '', remains: 0});
     }
   }
 
   return (
     <CalendarContainer>
-      {/* 요일 */}
       <CalendarDay>
         {days.map((day, index) => (
           <div key={index}>{day}</div>
@@ -122,16 +145,12 @@ const Calendar = () => {
       </CalendarDay>
       <CalendarGrid>
         {calendarDates.map((day, index) => (
-          <TodoDay key={index}>
-            {day.date !== '' && (
-              <>
-                <TodoDayCheck $remains={day.remains}>
-                  {day.remains === 0 ? <FaCheck /> : `${day.remains}`}
-                </TodoDayCheck>
-                <TodoDayDate>{day.date}</TodoDayDate>
-              </>
-            )}
-          </TodoDay>
+          <TodoDay 
+            key={index} 
+            fullDate = {day.fullDate}
+            date={day.date} 
+            remains={day.remains} 
+          />
         ))}
       </CalendarGrid>
     </CalendarContainer>

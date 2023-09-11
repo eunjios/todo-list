@@ -1,32 +1,5 @@
-import React, { createContext, useContext, useReducer, useRef } from "react";
+import React, { createContext, useContext, useReducer, useRef, useState } from "react";
 import { todoData } from "./store/data";
-
-const initialTodos = [
-  {
-    id: 1,
-    text: 'UI/UX 디자인',
-    done: true,
-    color: '#5F8B58',
-  },
-  {
-    id: 2,
-    text: '컴포넌트 만들기',
-    done: true,
-    color: '#5F8B58',
-  },
-  {
-    id: 3,
-    text: 'context 만들기',
-    done: false,
-    color: '#5F8B58',
-  },
-  {
-    id: 4,
-    text: '기능 구현하기',
-    done: false,
-    color: '#5F8B58',
-  },
-];
 
 // 리듀서
 function TodoReducer(state, action) {
@@ -52,9 +25,28 @@ function TodoReducer(state, action) {
 }
 
 // 컨텍스트
+const DateStateContext = createContext();
+const DateUpdateContext = createContext();
 const TodoStateContext = createContext();
 const TodoDispatchContext = createContext();
 const TodoNextIdContext = createContext();
+
+export function DateProvider({ children }) {
+  const today = new Date().toLocaleDateString();
+  const [selectedDate, setSelectedDate] = useState(today);
+
+  const setDate = (date) => {
+    setSelectedDate(date);
+  }
+
+  return (
+    <DateStateContext.Provider value={selectedDate}>
+      <DateUpdateContext.Provider value={setDate}>
+        {children}
+      </DateUpdateContext.Provider>
+    </DateStateContext.Provider>
+  )
+}
 
 export function TodoProvider({ children }) {
   const [state, dispatch] = useReducer(TodoReducer, todoData);
@@ -72,6 +64,22 @@ export function TodoProvider({ children }) {
 }
 
 // 커스텀 훅
+export function useDateState() {
+  const context = useContext(DateStateContext);
+  if (!context) {
+    throw new Error('Cannot find DateProvider');
+  }
+  return context;
+}
+
+export function useDateUpdate() {
+  const context = useContext(DateUpdateContext);
+  if (!context) {
+    throw new Error('Cannot find DateProvider');
+  }
+  return context;
+}
+
 export function useTodoState() {
   const context = useContext(TodoStateContext);
   if (!context) {
