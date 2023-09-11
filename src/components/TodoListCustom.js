@@ -48,20 +48,41 @@ function TodoCategoryButton({ title, color }) {
 }
 
 function TodoListCustom() {
-  const todos = useTodoState();
+  const categories = [
+    {
+      id: 1,
+      name: '공부',
+      color: '#5F8B58'
+    },
+    {
+      id: 2,
+      name: '루틴',
+      color: '#B79698'
+    },
+    {
+      id: 3,
+      name: '체크리스트',
+      color: '#D5A491'
+    }
+  ];
+
+  const datas = useTodoState();
   const selectedDate = useDateState();
-  const targetTodos = todos.filter(todo => todo.date === selectedDate); // TODO: targetDate
+  const targetDatas = datas.find(data => data.date === selectedDate);
+
   return (
     <TodoListContainer>
-      {targetTodos.map(data => (
-        <>
-          {data.categories.map(category => (
-            <>
-            <TodoCategoryButton 
-              title={category.name} 
-              color={category.color} 
-            />
-            {category.todos.map(todo => (
+      {categories.map(category => {
+        return (
+          <>
+          <TodoCategoryButton 
+            key={category.id}
+            title={category.name} 
+            color={category.color} 
+          />
+          {targetDatas && targetDatas.todos
+            .filter(todo => todo.cateId === category.id)
+            .map(todo => (
               <TodoItemCustom 
                 key={todo.id}
                 id={todo.id}
@@ -69,11 +90,11 @@ function TodoListCustom() {
                 done={todo.done}
                 color={category.color}
               />
-            ))}
-            </>
-          ))}
-        </>
-      ))}
+            ))
+          }
+          </>
+        );
+      })}
     </TodoListContainer>
   );
 }

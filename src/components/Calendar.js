@@ -116,14 +116,12 @@ const Calendar = () => {
       const dateString = date.toLocaleDateString();
       const targetTodos = todos.find(todo => todo.date === dateString);
 
+      console.log(targetTodos);
+
       let remains = 0;
-      if(targetTodos) {
-        remains = 0;
-        targetTodos.categories.forEach(category => {
-          category.todos.forEach(todo => {
-            if (!todo.done) remains++;
-          })
-        })
+      // TODO: targetTodos.todos.length > 0
+      if (targetTodos) {
+        remains = targetTodos.todos.filter(todo => !todo.done).length;
       }
       console.log(remains);
       calendarDates.push({
@@ -157,4 +155,4 @@ const Calendar = () => {
   );
 };
 
-export default Calendar;
+export default React.memo(Calendar);

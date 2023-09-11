@@ -10,13 +10,10 @@ function TodoReducer(state, action) {
       const { id } = action;
       return state.map(data => ({
         ...data,
-        categories: data.categories.map(category => ({
-          ...category,
-          todos: category.todos.map(todo => (
-            todo.id === id ? {...todo, done: !todo.done} : todo
-          ))
-        }))
-      }));
+        todos: data.todos.map(todo => (
+          todo.id === id ? {...todo, done: !todo.done} : todo
+        ))
+      }))
     case 'REMOVE':
       return state.filter(todo => todo.id !== action.id);
     default:
