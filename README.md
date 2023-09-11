@@ -1,157 +1,174 @@
 # Todo List
 > 아직 미완성인 프로젝트 입니다. 목표는 투두메이트 비슷하게 만들기! 🚀 
 
-<img width="480" alt="preview" src="https://github.com/eunjios/todo-list/assets/77034159/3c97b875-ba10-4e18-8636-45709071da8d">
+<img width="480" alt="preview" src="https://github.com/eunjios/todo-list/assets/77034159/16ff1128-9296-4708-9f97-c8b19e5755a7">
+<img width="480" alt="preview" src="https://github.com/eunjios/todo-list/assets/77034159/7d1f4757-4cb1-4ea4-b930-a0fa2f2d510d">
 
 
 ## Architecture
 ```
 ├── App.js
 ├── TodoContext.js
+├── store
+│   └── data.js
 ├── components
-│   ├── TodoCreate.js
-│   ├── TodoHead.js
-│   ├── TodoItem.js
-│   ├── TodoList.js
-│   └── TodoTemplate.js
+│   ├── Calendar.js
+│   ├── TodoCalendar.js
+│   ├── TodoItemCustom.js
+│   ├── TodoListCustom.js
+│   └── TodoProfile.js
 └── ... (중략) ...
 ```
-## TodoContext
-> TODO list의 상태 관리를 위한 context
-- `initialTodos`: todos의 초기값
 
-### Reducer 함수
-```javascript
-function TodoReducer(state, action) {
-  switch (action.type) {
-    case 'CREATE': // 새로운 TODO 만들기 
-      return state.concat(action.todo);
-    case 'TOGGLE': // 해당 id 의 item 의 done 값 toggle
-      return state.map(todo =>
-        todo.id === action.id ? { ...todo, done: !todo.done} : todo
-      );
-    case 'REMOVE': // 해당 id 의 item 삭제 
-      return state.filter(todo => todo.id !== action.id);
-    default: // error 처리 
-      throw new Error(`Unhandled action type: ${action.type}`);
-  }
-}
+## data
+```js
+const categories: {
+    id: number;
+    name: string;
+    color: string;
+}[]
+```
+```js
+const todoData: {
+    date: string;
+    todos: {
+        id: number;
+        cateId: number;
+        text: string;
+        done: boolean;
+    }[];
+}[]
+```
+
+## TodoContextCustom
+> TODO list의 상태 관리를 위한 context
+
+### Toggle
+```js
+// 리듀서 정의 
+// ...
+case 'TOGGLE':
+  const { id } = action;
+  return state.map(data => ({
+    ...data,
+    todos: data.todos.map(todo => (
+      todo.id === id ? {...todo, done: !todo.done} : todo
+    ))
+  }))
 ```
 
 ### Context
+- `DateProvider`: 선택한 날짜 관련 컨텍스트 제공
+- `TodoProvider`: 투두리스트 관련 컨텍스트 제공
 ```javascript
-const TodoStateContext = createContext();
-const TodoDispatchContext = createContext();
-const TodoNextIdContext = createContext();
-```
-```javascript
-export function TodoProvider({ children }) {
-  const [state, dispatch] = useReducer(TodoReducer, initialTodos); // 리듀서와 초기값 설정 
-  const nextId = useRef(5); 
+// DateProvider
+const today = new Date().toLocaleDateString();
+const [selectedDate, setSelectedDate] = useState(today);
 
-  return (
-    <TodoStateContext.Provider value={state}>
-      <TodoDispatchContext.Provider value={dispatch}>
-        <TodoNextIdContext.Provider value={nextId}>
-          {children}
-        </TodoNextIdContext.Provider>
-      </TodoDispatchContext.Provider>
-    </TodoStateContext.Provider>
-  );
+const setDate = (date) => {
+  setSelectedDate(date);
 }
 ```
-- `TodoStateContext.Provider`: state 관리 context 제공
-- `TodoDispatchContext.Provider`: dispatch 관리 context 제공
-- `TodoNextIdContext.Provider`: nextId 관리 context 제공
+```javascript
+// TodoProvider
+const [state, dispatch] = useReducer(TodoReducer, todoData);
+const nextId = useRef(15);
+```
 
 ### Custom Hook
-```javascript
-export function useTodoState () {
-  // TodoProvider로 감싸져야 함 -> 아니면 에러 처리 
-  const context = useContext(TodoStateContext);
-  if (!context) {
-    throw new Error('Cannot find TodoProvider');
-  }
-  return context;
-}
-```
+- `useDateState`: selectedDate의 context 값 추출
+- `useDateUpdate`: setDate의 context 값 추출
 - `useTodoState`: state의 context 값 추출 
 - `useTodoDispatch`: dispatch의 context 값 추출 
 - `useTodoNextId`: nextId의 context 값 추출 
 
-## TodoTemplate
-> TODO list의 레이아웃을 설정하는 컴포넌트
 
-## TodoHead
-> 오늘 날짜, 남은 할 일 개수를 보여주는 컴포넌트
+## TodoProfile
+> 유저 정보를 보여주는 컴포넌트
 
-```javascript
-  <TodoHeadBlock>
-    <h1>{datString}</h1>
-    <div>{dayName}</div>
-    <div>할 일 {undoneTasks.length}개 남음</div>
-  </TodoHeadBlock>
-```
-
-**변수 정리**
-- `todos`: context의 state로 받아옴
-- `undoneTasks`: todos 배열의 `done` 이 false 인 것만을 필터링
-- `dateString`, `dayName`: 날짜 정보
-
-## TodoList
-> TODO list의 내용 컴포넌트 
+- 아직 하드 코딩되어 있지만 추후 업데이트 예정
 
 ```javascript
-<TodoListBlock>
-  {todos.map(todo => (
-    <TodoItem
-      key={todo.id}
-      id={todo.id}
-      text={todo.text}
-      done={todo.done}
-    />
-  ))}
-</TodoListBlock>
+return (
+  <ProfileContainer>
+    <PictureCircle />
+    <ProfileInfo>
+      <UserName>은지</UserName>
+      <UserMessage>프로필에 자기소개를 입력해보세요</UserMessage>
+    </ProfileInfo>
+  </ProfileContainer>
+);
 ```
 
-**변수 정리**
-- `todos`: context의 state로 받아옴 
+## TodoCalendar
+> 달력 전체 부분
 
-## TodoItem
+```javascript
+return (
+  <>
+  <CalendarHeadContainer>
+    // ... 중략
+  </CalendarHeadContainer>
+  <Calendar />
+  </>
+);
+```
+- `CalendarHeadContainer` : 이번 달 done의 개수 (지금은 하드 코딩된 상태)
+- `Calendar` : 달력 레이아웃
+
+### Calendar
+```js
+<TodoDayCheck 
+  $remains={remains} 
+  $length={length} 
+  onClick={onDayClick}
+>
+  {remains === 0 && length > 0 ? 
+    <FaCheck /> : 
+    `${length !== 0 ? remains : ''}`
+  }
+</TodoDayCheck>
+<TodoDayDate>{date}</TodoDayDate>
+```
+- `length` : 해당 날짜의 총 할 일 개수
+- `remains` : 해당 날짜의 남아있는 할 일 개수
+
+
+
+## TodoListCustom
 > TODO list item의 레이아웃 설정하는 컴포넌트
 
+- 카테고리 별로 투두리스트 렌더링
+- 아이템 클릭시 `TOGGLE`을 통해 done 상태 변경
+- 카테고리 버튼 클릭시 투두리스트 추가 예정
+
 ```javascript
-<TodoItemBlock>
-  <CheckCircle>{done && <MdDone />}</CheckCircle>
-  <Text>{text}</Text>
-  <Remove><MdDelete /></Remove>
-</TodoItemBlock>
+{categories.map(category => {
+  return (
+    <>
+    <TodoCategoryButton
+      key={category.id}
+      title={category.name} 
+      color={category.color} 
+    />
+    {targetDatas && targetDatas.todos
+      .filter(todo => todo.cateId === category.id)
+      .map(todo => (
+        <TodoItemCustom 
+          key={todo.id}
+          id={todo.id}
+          text={todo.text}
+          done={todo.done}
+          color={category.color}
+        />
+      ))
+    }
+    </>
+  );
+})}
 ```
-**변수/함수 정리**
-- `dispatch`: context의 dispatch 가져옴 
-- `onToggle`: CheckCircle 누를 때 done 상태를 toggle (dispatch `TOGGLE`)
-- `onRemove`: Remove 누를 때 해당 item을 삭제 (dispatch `REMOVE`)
+
 
 ## TodoCreate
 > TODO list item을 추가하는 컴포넌트
-
-```javascript
-<>
-  {open && (
-    <InsertFormPositioner>
-      <InsertForm>
-        <Input />
-      </InsertForm>
-    </InsertFormPositioner>
-  )}
-  <CircleButton><MdAdd /></CircleButton>
-</>
-```
-**변수/함수 정리**
-- `[open, setOpen]`: useState로 input의 open 여부 관리
-- `[value, setValue]`: useState로 input의 값 관리
-- `dispatch`: context의 dispatch
-- `nextId`: context의 nextId 사용 (배열의 다음 id)
-- `onToggle`: `setOpen` 으로 `open` 값을 toggle
-- `onChange`: 변경되는 값을 `value`로 설정
-- `onSubmit`: dispatch의 `CREATE`로 배열에 item 추가하고 input 초기화 
+- 아직 미완성 상태 
