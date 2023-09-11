@@ -87,7 +87,7 @@ const Calendar = () => {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
       calendarDates.push({
         date: i,
-        isPast: date < currentDate,
+        isPast: date < currentDate, // TODO: isDone 으로 변경 
       });
     } else {
       calendarDates.push({date: '', isPast: true});

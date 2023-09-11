@@ -49,19 +49,30 @@ function TodoCategoryButton({ title, color }) {
 
 function TodoListCustom() {
   const todos = useTodoState();
+  const targetTodos = todos.filter(todo => todo.date === '2023-09-11'); // TODO: targetDate
   return (
     <TodoListContainer>
-      <TodoCategoryButton title="공부" color="#5F8B58"/>
-      {todos.map(todo => (
-        <TodoItemCustom 
-          key={todo.id}
-          id={todo.id}
-          text={todo.text}
-          done={todo.done}
-          color={todo.color}
-        />
+      {targetTodos.map(data => (
+        <>
+          {data.categories.map(category => (
+            <>
+            <TodoCategoryButton 
+              title={category.name} 
+              color={category.color} 
+            />
+            {category.todos.map(todo => (
+              <TodoItemCustom 
+                key={todo.id}
+                id={todo.id}
+                text={todo.text}
+                done={todo.done}
+                color={category.color}
+              />
+            ))}
+            </>
+          ))}
+        </>
       ))}
-      <TodoCategoryButton title="루틴" color="#F38D7F"/>
     </TodoListContainer>
   );
 }
