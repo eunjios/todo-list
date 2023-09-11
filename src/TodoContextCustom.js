@@ -47,7 +47,7 @@ export function DateProvider({ children }) {
 
 export function TodoProvider({ children }) {
   const [state, dispatch] = useReducer(TodoReducer, todoData);
-  const nextId = useRef(11);
+  const nextId = useRef(15);
 
   return (
     <TodoStateContext.Provider value={state}>

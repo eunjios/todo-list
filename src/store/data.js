@@ -86,5 +86,34 @@ export const todoData = [
         done: true,
       }
     ]
+  },
+  {
+    date: '2023. 9. 9.',
+    todos: [
+      {
+        id: 11,
+        cateId: 1,
+        text: '알고리즘 공부',
+        done: false,
+      },
+      {
+        id: 12,
+        cateId: 1,
+        text: 'JavaScript 공부',
+        done: false,
+      },
+      {
+        id: 13,
+        cateId: 2,
+        text: '아침 7시 기상',
+        done: false,
+      },
+      {
+        id: 14,
+        cateId: 3,
+        text: '그릭요거트 구매',
+        done: false,
+      }
+    ]
   }
 ];

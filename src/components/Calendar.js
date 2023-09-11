@@ -48,7 +48,7 @@ const TodoDayCheck = styled.div`
   border-radius: 32%;
   cursor: pointer;
   background-color: ${props => 
-    (props.$remains !== 0 ? '#5F8B58' : '#D9D9D9')
+    (props.$length - props.$remains > 0 ? '#5F8B58' : '#D9D9D9')
   };
 
   /* 
@@ -78,7 +78,7 @@ const TodoDayDate = styled.div`
   line-height: normal;
 `;
 
-function TodoDay({ fullDate, date, remains }) {
+function TodoDay({ fullDate, date, remains, length }) {
   const setDate = useDateUpdate();
   const onDayClick = () => {
     if (fullDate !== '') {
@@ -90,8 +90,8 @@ function TodoDay({ fullDate, date, remains }) {
     <TodoDayContainer>
       {date !== '' && (
         <>
-          <TodoDayCheck $remains={remains} onClick={onDayClick}>
-            {remains === 0 ? <FaCheck /> : `${remains}`}
+          <TodoDayCheck $remains={remains} $length={length} onClick={onDayClick}>
+            {remains === 0 && length > 0 ? <FaCheck /> : `${length !== 0 ? remains : ''}`}
           </TodoDayCheck>
           <TodoDayDate>{date}</TodoDayDate>
         </>
@@ -119,18 +119,21 @@ const Calendar = () => {
       console.log(targetTodos);
 
       let remains = 0;
+      let length = 0;
       // TODO: targetTodos.todos.length > 0
       if (targetTodos) {
         remains = targetTodos.todos.filter(todo => !todo.done).length;
+        length = targetTodos.todos.length;
       }
       console.log(remains);
       calendarDates.push({
         fullDate: dateString,
         date: i,
         remains: remains, // TODO: null 이면 숫자 X
+        length: length
       });
     } else {
-      calendarDates.push({fullDate: '', date: '', remains: 0});
+      calendarDates.push({fullDate: '', date: '', remains: 0, length: 0});
     }
   }
 
@@ -148,6 +151,7 @@ const Calendar = () => {
             fullDate = {day.fullDate}
             date={day.date} 
             remains={day.remains} 
+            length={day.length}
           />
         ))}
       </CalendarGrid>
