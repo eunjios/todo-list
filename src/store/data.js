@@ -1,6 +1,6 @@
 export const todoData = [
   {
-    date: '2023-09-11',
+    date: '2023. 9. 11.',
     categories: [
       {
         name: '공부',
@@ -42,7 +42,7 @@ export const todoData = [
     ]
   },
   {
-    date: '2023-09-10',
+    date: '2023. 9. 10.',
     categories: [
       {
         name: '공부',

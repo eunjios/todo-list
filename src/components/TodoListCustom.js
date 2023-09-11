@@ -49,7 +49,7 @@ function TodoCategoryButton({ title, color }) {
 
 function TodoListCustom() {
   const todos = useTodoState();
-  const targetTodos = todos.filter(todo => todo.date === '2023-09-11'); // TODO: targetDate
+  const targetTodos = todos.filter(todo => todo.date === '2023. 9. 11.'); // TODO: targetDate
   return (
     <TodoListContainer>
       {targetTodos.map(data => (

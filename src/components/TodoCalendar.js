@@ -43,11 +43,14 @@ const CalendarArrow = styled.div`
 `;
 
 function TodoCalendar() {
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1;
   return (
     <>
     <CalendarHeadContainer>
       <CalendarInfo>
-        <CalendarDate>2023년 8월</CalendarDate>
+        <CalendarDate>{year}년 {month}월</CalendarDate>
         <CalendarDone>
           <MdCheckBox color="#8F8F8F"/>
           <span>27</span>
