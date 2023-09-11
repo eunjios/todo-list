@@ -22,6 +22,7 @@ const CheckBox = styled.div`
   background: ${props => (
     props.done ? props.color :'#D9D9D9'
   )};
+  cursor: pointer;
 `;
 
 const Text = styled.div`
