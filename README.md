@@ -1,8 +1,7 @@
 # Todo List
 > 아직 미완성인 프로젝트 입니다. 목표는 투두메이트 비슷하게 만들기! 🚀 
 
-<img width="480" alt="preview" src="https://github.com/eunjios/todo-list/assets/77034159/16ff1128-9296-4708-9f97-c8b19e5755a7">
-<img width="480" alt="preview" src="https://github.com/eunjios/todo-list/assets/77034159/7d1f4757-4cb1-4ea4-b930-a0fa2f2d510d">
+![Simulator](https://github.com/eunjios/todo-list/assets/77034159/34c005e5-2006-4cf0-868d-944982d9f936)
 
 
 ## Architecture
@@ -82,8 +81,14 @@ const nextId = useRef(15);
 - `useTodoDispatch`: dispatch의 context 값 추출 
 - `useTodoNextId`: nextId의 context 값 추출 
 
+<br />
+<br />
 
-## TodoProfile
+## Components
+### TodoProfile
+
+<img width="480" alt="TodoProfile" src="https://github.com/eunjios/todo-list/assets/77034159/ee7b416a-b183-461f-a44d-e1bebd873929">
+
 > 유저 정보를 보여주는 컴포넌트
 
 - 아직 하드 코딩되어 있지만 추후 업데이트 예정
@@ -100,7 +105,9 @@ return (
 );
 ```
 
-## TodoCalendar
+### TodoCalendar
+<img width="480" alt="TodoCalendar" src="https://github.com/eunjios/todo-list/assets/77034159/76bc7807-3ab0-4982-af45-2880efd8f384">
+
 > 달력 전체 부분
 
 ```javascript
@@ -135,12 +142,11 @@ return (
 
 
 
-## TodoListCustom
+### TodoListCustom
+<img width="480" alt="preview" src="https://github.com/eunjios/todo-list/assets/77034159/7d1f4757-4cb1-4ea4-b930-a0fa2f2d510d">  
+
 > TODO list item의 레이아웃 설정하는 컴포넌트
 
-- 카테고리 별로 투두리스트 렌더링
-- 아이템 클릭시 `TOGGLE`을 통해 done 상태 변경
-- 카테고리 버튼 클릭시 투두리스트 추가 예정
 
 ```javascript
 {categories.map(category => {
@@ -167,8 +173,10 @@ return (
   );
 })}
 ```
+- 카테고리 별로 투두리스트 렌더링
+- 아이템 클릭시 `TOGGLE`을 통해 done 상태 변경
+- 카테고리 버튼 클릭시 투두리스트 추가 예정
 
-
-## TodoCreate
+### TodoCreate
 > TODO list item을 추가하는 컴포넌트
 - 아직 미완성 상태 
