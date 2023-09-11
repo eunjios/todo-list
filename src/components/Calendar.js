@@ -82,7 +82,7 @@ const Calendar = () => {
   const firstDayOfWeek = firstDay.getDay();
 
   const calendarDates = [];
-  for (let i = 1 - firstDayOfWeek; i <= lastDay.getDate(); i++) {
+  for (let i = 2 - firstDayOfWeek; i <= lastDay.getDate(); i++) {
     if (i > 0) {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
       calendarDates.push({
