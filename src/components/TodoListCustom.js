@@ -68,14 +68,14 @@ function TodoListCustom() {
     }
   ];
 
-  const [newTodo, setNewTodo] = useState(['', 0]);
+  const [newTodo, setNewTodo] = useState({ selectedDate: '', cateId: 0 });
   const datas = useTodoState();
   const selectedDate = useDateState();
   const targetDatas = datas.find(data => data.date === selectedDate);
 
   const addTodo = (selectedDate, cateId) => {
-    setNewTodo([selectedDate, cateId]);
-    console.log([selectedDate, cateId]);
+    setNewTodo({ selectedDate, cateId });
+    console.log({ selectedDate, cateId });
   }
 
   return (
@@ -104,10 +104,11 @@ function TodoListCustom() {
             ))
           }
           {/* 카테고리 제목에 해당하는 새로운 투두 만드는 input */}
-          {newTodo[0] === selectedDate && 
-          newTodo[1] === category.id &&
+          {newTodo.selectedDate === selectedDate && 
+          newTodo.cateId === category.id &&
             <TodoCreateCustom 
               newTodo={newTodo}
+              setNewTodo={setNewTodo}
               color={category.color}
             />
           }

@@ -1,24 +1,67 @@
 import React, { useState } from "react";
-import { styled } from "styled-components";
+import { keyframes, styled } from "styled-components";
 import { useTodoDispatch, useTodoNextId } from "../TodoContextCustom";
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.8;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 0.8;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
+const TodoItemContainer = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px;
+`;
+
+const CheckBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 32%;
+  color: #FFF;
+  font-size: 14px;
+  background: #D9D9D9;
+`;
 
 const InsertForm = styled.form`
   padding: 0 0 8px 0;
   border-bottom: 2px solid ${props => props.color};
-  transition: 0.3s;
   opacity: 0.8;
+  width: 90%; // 정확히 변경 필요 
+
+  animation-duration: 0.4s;
+  animation-name: ${fadeIn};
 `;
 
 const Input = styled.input`
-  padding: 4px;
+  padding: 0px;
   width: 100%;
   box-sizing: border-box;
   border: none;
   outline: none;
   font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 `;
 
-function TodoCreateCustom({ newTodo, color }) {
+function TodoCreateCustom({ newTodo, setNewTodo, color }) {
   const [value, setValue] = useState('');
 
   const dispatch = useTodoDispatch();
@@ -30,31 +73,35 @@ function TodoCreateCustom({ newTodo, color }) {
     dispatch({
       type: 'CREATE',
       data: {
-        date: newTodo[0],
+        date: newTodo.selectedDate,
         todo: {
           id: nextId.current,
-          cateId: newTodo[1],
+          cateId: newTodo.cateId,
           text: value,
           $done: false
         }
       }
     });
+    setNewTodo({ selectedDate: '', cateId: 0 });
     setValue('');
     nextId.current += 1;
   }
   return (
-    <InsertForm 
-      onSubmit={onSubmit}
-      color={color}
-    >
-      <Input 
-        key={nextId}
-        autoFocus
-        placeholder="입력"
-        onChange={onChange}
-        value={value}
-      />
-    </InsertForm>
+    <TodoItemContainer>
+      <CheckBox />
+      <InsertForm 
+        onSubmit={onSubmit}
+        color={color}
+      >
+        <Input 
+          key={nextId}
+          autoFocus
+          placeholder="입력"
+          onChange={onChange}
+          value={value}
+        />
+      </InsertForm>
+    </TodoItemContainer>
   )
 }
 
