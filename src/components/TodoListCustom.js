@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from 'styled-components';
 import { BsBoxFill } from 'react-icons/bs';
 import { ReactComponent as PlusButton } from '../assets/PlusButton.svg';
 import TodoItemCustom from "./TodoItemCustom";
 import { useDateState, useTodoState } from "../TodoContextCustom";
+import TodoCreateCustom from "./TodoCreateCustom";
 
 const TodoListContainer = styled.div`
   display: flex;
@@ -29,16 +30,17 @@ const TodoCategoryBlock = styled.div`
   font-weight: 800;
   line-height: normal;
   color: #D9D9D9;
+  cursor: pointer;
 `;
 
 const TodoCategory = styled.div`
   color: ${props => props.color};
 `;
 
-function TodoCategoryButton({ title, color }) {
+function TodoCategoryButton({ title, color, onClick }) {
   return (
     <TodoCategoryContainer>
-      <TodoCategoryBlock>
+      <TodoCategoryBlock onClick={onClick}>
         <BsBoxFill />
         <TodoCategory color={color}>{title}</TodoCategory>
         <PlusButton />
@@ -66,20 +68,29 @@ function TodoListCustom() {
     }
   ];
 
+  const [newTodo, setNewTodo] = useState(['', 0]);
   const datas = useTodoState();
   const selectedDate = useDateState();
   const targetDatas = datas.find(data => data.date === selectedDate);
+
+  const addTodo = (selectedDate, cateId) => {
+    setNewTodo([selectedDate, cateId]);
+    console.log([selectedDate, cateId]);
+  }
 
   return (
     <TodoListContainer>
       {categories.map(category => {
         return (
           <>
+          {/* 카테고리 제목 */}
           <TodoCategoryButton 
+            onClick={() => addTodo(selectedDate, category.id)}
             key={category.id}
             title={category.name} 
             color={category.color} 
           />
+          {/* 카테고리에 해당하는 투두리스트 */}
           {targetDatas && targetDatas.todos
             .filter(todo => todo.cateId === category.id)
             .map(todo => (
@@ -91,6 +102,13 @@ function TodoListCustom() {
                 color={category.color}
               />
             ))
+          }
+          {/* 카테고리 제목에 해당하는 새로운 투두 만드는 input */}
+          {newTodo[0] === selectedDate && 
+          newTodo[1] === category.id &&
+            <TodoCreateCustom 
+              newTodo={newTodo}
+            />
           }
           </>
         );

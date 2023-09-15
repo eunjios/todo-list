@@ -5,7 +5,23 @@ import { todoData } from "./store/data";
 function TodoReducer(state, action) {
   switch (action.type) {
     case 'CREATE':
-      return state.concat(action.todo);
+      const newDate = action.data.date;
+      const newTodo = action.data.todo;
+      const selectedData = state.find(data => data.date === newDate);
+
+      if (selectedData) {
+        return state.map(data => {
+          if (data.date === newDate) {
+            return {
+              ...data,
+              todos: [...data.todos, newTodo],
+            };
+          }
+          return data;
+        });
+      } else {
+        return [...state, { date: newDate, todos: [newTodo] }];
+      }
     case 'TOGGLE':
       const { id } = action;
       return state.map(data => ({
