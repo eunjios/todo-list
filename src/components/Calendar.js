@@ -51,15 +51,6 @@ const TodoDayCheck = styled.div`
     (props.$length - props.$remains > 0 ? '#5F8B58' : '#D9D9D9')
   };
 
-  /* 
-  TODO:
-
-  할 일 하나도 안 했으면 -> background: #D9D9D9; 
-  할 일 하나라도 했으면 -> background: #5F8B58;
-  
-  <div>{남아 있는 할 일 개수}<div>
-  {남아 있는 할 일 개수} 가 0 이면 -> check 표시 
-  */
   color: #FFF;
   text-align: center;
 
@@ -70,16 +61,28 @@ const TodoDayCheck = styled.div`
 `;
 
 const TodoDayDate = styled.div`
-  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   text-align: center;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  border-radius: 14px;
+  color: ${props => 
+    (props.$isSelected ? '#FFF' : '#000')
+  };
+  background-color: ${props => 
+    (props.$isSelected ? '#5983FC' : '#FFF')
+  };
 `;
 
 function TodoDay({ fullDate, date, remains, length }) {
   const setDate = useDateUpdate();
+  const selectedDate = useDateState();
   const onDayClick = () => {
     if (fullDate !== '') {
       setDate(fullDate);
@@ -90,10 +93,21 @@ function TodoDay({ fullDate, date, remains, length }) {
     <TodoDayContainer>
       {date !== '' && (
         <>
-          <TodoDayCheck $remains={remains} $length={length} onClick={onDayClick}>
-            {remains === 0 && length > 0 ? <FaCheck /> : `${length !== 0 ? remains : ''}`}
+          <TodoDayCheck 
+            $remains={remains} 
+            $length={length} 
+            onClick={onDayClick}
+          >
+            {remains === 0 && length > 0 ? 
+              <FaCheck /> : 
+              `${length !== 0 ? remains : ''}`
+            }
           </TodoDayCheck>
-          <TodoDayDate>{date}</TodoDayDate>
+          <TodoDayDate 
+            $isSelected={fullDate === selectedDate}
+          >
+            {date}
+          </TodoDayDate>
         </>
       )}
     </TodoDayContainer>
