@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
-import { useDateState, useTodoDispatch, useTodoNextId } from "../TodoContextCustom";
+import { useTodoDispatch, useTodoNextId } from "../TodoContextCustom";
 
 const InsertForm = styled.form`
   padding: 0 0 8px 0;
@@ -32,7 +32,7 @@ function TodoCreateCustom({ newTodo, color }) {
       data: {
         date: newTodo[0],
         todo: {
-          id: nextId,
+          id: nextId.current,
           cateId: newTodo[1],
           text: value,
           $done: false

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { BsBoxFill } from 'react-icons/bs';
 import { ReactComponent as PlusButton } from '../assets/PlusButton.svg';
 import TodoItemCustom from "./TodoItemCustom";
-import { useDateState, useTodoNextId, useTodoState } from "../TodoContextCustom";
+import { useDateState, useTodoState } from "../TodoContextCustom";
 import TodoCreateCustom from "./TodoCreateCustom";
 
 const TodoListContainer = styled.div`
@@ -72,7 +72,6 @@ function TodoListCustom() {
   const datas = useTodoState();
   const selectedDate = useDateState();
   const targetDatas = datas.find(data => data.date === selectedDate);
-  const nextId = useTodoNextId();
 
   const addTodo = (selectedDate, cateId) => {
     setNewTodo([selectedDate, cateId]);
