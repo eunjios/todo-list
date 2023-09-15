@@ -3,22 +3,22 @@ import { styled } from "styled-components";
 import { useDateState, useTodoDispatch, useTodoNextId } from "../TodoContextCustom";
 
 const InsertForm = styled.form`
-  background: #f8f9fa;
-  padding: 16px;
-  border-bottom: 1px solid #e9ecef;
+  padding: 0 0 8px 0;
+  border-bottom: 2px solid ${props => props.color};
+  transition: 0.3s;
+  opacity: 0.8;
 `;
 
 const Input = styled.input`
-  padding: 8px;
-  border-bottom: 1px solid #000;
+  padding: 4px;
   width: 100%;
   box-sizing: border-box;
+  border: none;
   outline: none;
   font-size: 18px;
 `;
 
-function TodoCreateCustom({ newTodo }) {
-  // const selectedDate = useDateState();
+function TodoCreateCustom({ newTodo, color }) {
   const [value, setValue] = useState('');
 
   const dispatch = useTodoDispatch();
@@ -35,19 +35,22 @@ function TodoCreateCustom({ newTodo }) {
           id: nextId,
           cateId: newTodo[1],
           text: value,
-          done: false
+          $done: false
         }
       }
     });
     setValue('');
-    // setOpen(false);
     nextId.current += 1;
   }
   return (
-    <InsertForm onSubmit={onSubmit}>
+    <InsertForm 
+      onSubmit={onSubmit}
+      color={color}
+    >
       <Input 
+        key={nextId}
         autoFocus
-        placeholder="할일"
+        placeholder="입력"
         onChange={onChange}
         value={value}
       />
