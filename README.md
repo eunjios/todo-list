@@ -1,7 +1,7 @@
 # Todo List
 > 아직 미완성인 프로젝트 입니다. 목표는 투두메이트 비슷하게 만들기! 🚀 
 
-![Simulator](https://github.com/eunjios/todo-list/assets/77034159/34c005e5-2006-4cf0-868d-944982d9f936)
+https://github.com/eunjios/todo-list/assets/77034159/dbb73d43-4319-4985-82ad-6b4682a97352
 
 
 ## Architecture
