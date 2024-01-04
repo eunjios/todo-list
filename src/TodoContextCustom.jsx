@@ -1,5 +1,11 @@
-import React, { createContext, useContext, useReducer, useRef, useState } from "react";
-import { todoData } from "./store/data";
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
+import { todoData } from './store/data';
 
 // 리듀서
 function TodoReducer(state, action) {
@@ -7,10 +13,10 @@ function TodoReducer(state, action) {
     case 'CREATE':
       const newDate = action.data.date;
       const newTodo = action.data.todo;
-      const selectedData = state.find(data => data.date === newDate);
+      const selectedData = state.find((data) => data.date === newDate);
 
       if (selectedData) {
-        return state.map(data => {
+        return state.map((data) => {
           if (data.date === newDate) {
             return {
               ...data,
@@ -24,14 +30,14 @@ function TodoReducer(state, action) {
       }
     case 'TOGGLE':
       const { id } = action;
-      return state.map(data => ({
+      return state.map((data) => ({
         ...data,
-        todos: data.todos.map(todo => (
-          todo.id === id ? {...todo, done: !todo.done} : todo
-        ))
-      }))
+        todos: data.todos.map((todo) =>
+          todo.id === id ? { ...todo, done: !todo.done } : todo
+        ),
+      }));
     case 'REMOVE':
-      return state.filter(todo => todo.id !== action.id);
+      return state.filter((todo) => todo.id !== action.id);
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
@@ -50,7 +56,7 @@ export function DateProvider({ children }) {
 
   const setDate = (date) => {
     setSelectedDate(date);
-  }
+  };
 
   return (
     <DateStateContext.Provider value={selectedDate}>
@@ -58,7 +64,7 @@ export function DateProvider({ children }) {
         {children}
       </DateUpdateContext.Provider>
     </DateStateContext.Provider>
-  )
+  );
 }
 
 export function TodoProvider({ children }) {

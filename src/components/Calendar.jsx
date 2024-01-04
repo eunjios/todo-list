@@ -10,6 +10,7 @@ const CalendarContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 12px;
 `;
 
 const CalendarDay = styled.div`
