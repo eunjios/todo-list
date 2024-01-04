@@ -1,7 +1,7 @@
-import React from "react";
-import { styled } from "styled-components";
+import React from 'react';
+import { styled } from 'styled-components';
 import { FaCheck } from 'react-icons/fa';
-import { useTodoDispatch } from "../TodoContextCustom";
+import { useTodoListStore } from '../store/todo';
 
 const TodoItemContainer = styled.div`
   display: inline-flex;
@@ -10,18 +10,16 @@ const TodoItemContainer = styled.div`
   padding: 4px;
 `;
 
-const CheckBox = styled.div`
+const CheckBox = styled.div<{ done: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 28px;
   height: 28px;
   border-radius: 32%;
-  color: #FFF;
+  color: #fff;
   font-size: 14px;
-  background: ${props => (
-    props.done ? props.color :'#D9D9D9'
-  )};
+  background: ${(props) => (props.done ? props.color : '#D9D9D9')};
   cursor: pointer;
 `;
 
@@ -34,10 +32,9 @@ const Text = styled.div`
   line-height: normal;
 `;
 
-function TodoItemCustom({ id, done, color, text }) {
-  const dispatch = useTodoDispatch();
-  const onToggle = () => dispatch({ type: 'TOGGLE', id });
-  // const onRemove = () => dispatch({ type: 'ROMOVE', id });
+function TodoItem({ id, done, color, text }) {
+  const toggleTodo = useTodoListStore((state) => state.toggleTodo);
+  const onToggle = () => toggleTodo(id);
   return (
     <TodoItemContainer>
       <CheckBox done={done} color={color} onClick={onToggle}>
@@ -48,4 +45,4 @@ function TodoItemCustom({ id, done, color, text }) {
   );
 }
 
-export default React.memo(TodoItemCustom);
+export default React.memo(TodoItem);

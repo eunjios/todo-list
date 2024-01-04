@@ -1,5 +1,5 @@
-import React from "react";
-import { styled } from "styled-components";
+import React from 'react';
+import { styled } from 'styled-components';
 
 const ProfileContainer = styled.div`
   display: inline-flex;
@@ -13,7 +13,7 @@ const PictureCircle = styled.div`
   width: 62px;
   height: 62px;
   border-radius: 50%;
-  background: #D9D9D9;
+  background: #d9d9d9;
 `;
 
 const ProfileInfo = styled.div`
