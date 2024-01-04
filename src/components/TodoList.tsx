@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { BsBoxFill, BsFillPlusCircleFill } from 'react-icons/bs';
-import TodoItemCustom from './TodoItemCustom';
-import { useDateState, useTodoState } from '../TodoContextCustom';
-import TodoCreateCustom from './TodoCreateCustom';
+import TodoItem from './TodoItem';
+import TodoCreate from './TodoCreate';
+import { useTodoListStore } from '../store/todo';
 
 const TodoListContainer = styled.div`
   display: flex;
@@ -48,7 +48,7 @@ function TodoCategoryButton({ title, color, onClick }) {
   );
 }
 
-function TodoListCustom() {
+function TodoList() {
   const categories = [
     {
       id: 1,
@@ -68,33 +68,31 @@ function TodoListCustom() {
   ];
 
   const [newTodo, setNewTodo] = useState({ selectedDate: '', cateId: 0 });
-  const datas = useTodoState();
-  const selectedDate = useDateState();
-  const targetDatas = datas.find((data) => data.date === selectedDate);
+  const todoList = useTodoListStore((state) => state.todoList);
+  const selectedDate = useTodoListStore((state) => state.selectedDate);
+  const targetData = todoList.find((data) => data.date === selectedDate);
 
-  const addTodo = (selectedDate, cateId) => {
+  const addTodo = (selectedDate: string, cateId: number) => {
     setNewTodo({ selectedDate, cateId });
-    console.log({ selectedDate, cateId });
   };
 
   return (
     <TodoListContainer>
       {categories.map((category) => {
         return (
-          <>
+          <React.Fragment key={category.id}>
             {/* 카테고리 제목 */}
             <TodoCategoryButton
               onClick={() => addTodo(selectedDate, category.id)}
-              key={category.id}
               title={category.name}
               color={category.color}
             />
             {/* 카테고리에 해당하는 투두리스트 */}
-            {targetDatas &&
-              targetDatas.todos
+            {targetData &&
+              targetData.todos
                 .filter((todo) => todo.cateId === category.id)
                 .map((todo) => (
-                  <TodoItemCustom
+                  <TodoItem
                     key={todo.id}
                     id={todo.id}
                     text={todo.text}
@@ -105,17 +103,17 @@ function TodoListCustom() {
             {/* 카테고리 제목에 해당하는 새로운 투두 만드는 input */}
             {newTodo.selectedDate === selectedDate &&
               newTodo.cateId === category.id && (
-                <TodoCreateCustom
+                <TodoCreate
                   newTodo={newTodo}
                   setNewTodo={setNewTodo}
                   color={category.color}
                 />
               )}
-          </>
+          </React.Fragment>
         );
       })}
     </TodoListContainer>
   );
 }
 
-export default TodoListCustom;
+export default TodoList;

@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FaCheck } from 'react-icons/fa';
-import { useTodoState } from '../TodoContextCustom';
-import { useDateState, useDateUpdate } from '../TodoContextCustom';
+import { useTodoListStore } from '../store/todo';
 
-const days = ["월", "화", "수", "목", "금", "토", "일"];
+const days = ['월', '화', '수', '목', '금', '토', '일'];
 
 const CalendarContainer = styled.div`
   display: flex;
@@ -40,7 +39,7 @@ const TodoDayContainer = styled.div`
   padding: 6px;
 `;
 
-const TodoDayCheck = styled.div`
+const TodoDayCheck = styled.div<{ $colored: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -48,11 +47,9 @@ const TodoDayCheck = styled.div`
   height: 32px;
   border-radius: 32%;
   cursor: pointer;
-  background-color: ${props => 
-    (props.$length - props.$remains > 0 ? '#5F8B58' : '#D9D9D9')
-  };
+  background-color: ${(props) => (props.$colored ? '#5F8B58' : '#D9D9D9')};
 
-  color: #FFF;
+  color: #fff;
   text-align: center;
 
   font-size: 16px;
@@ -61,7 +58,7 @@ const TodoDayCheck = styled.div`
   line-height: normal;
 `;
 
-const TodoDayDate = styled.div`
+const TodoDayDate = styled.div<{ selected: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,82 +70,87 @@ const TodoDayDate = styled.div`
   font-weight: 600;
   line-height: normal;
   border-radius: 14px;
-  color: ${props => 
-    (props.$isSelected ? '#FFF' : '#000')
-  };
-  background-color: ${props => 
-    (props.$isSelected ? '#5983FC' : '#FFF')
-  };
+  color: ${(props) => (props.selected ? '#FFF' : '#000')};
+  background-color: ${(props) => (props.selected ? '#5983FC' : '#FFF')};
 `;
 
 function TodoDay({ fullDate, date, remains, length }) {
-  const setDate = useDateUpdate();
-  const selectedDate = useDateState();
+  const setDate = useTodoListStore((state) => state.setDate);
+  const selectedDate = useTodoListStore((state) => state.selectedDate);
+
   const onDayClick = () => {
     if (fullDate !== '') {
       setDate(fullDate);
     }
-    console.log(fullDate);
-  }
+  };
+
   return (
     <TodoDayContainer>
       {date !== '' && (
         <>
-          <TodoDayCheck 
-            $remains={remains} 
-            $length={length} 
-            onClick={onDayClick}
-          >
-            {remains === 0 && length > 0 ? 
-              <FaCheck /> : 
+          <TodoDayCheck $colored={length - remains > 0} onClick={onDayClick}>
+            {remains === 0 && length > 0 ? (
+              <FaCheck />
+            ) : (
               `${length !== 0 ? remains : ''}`
-            }
+            )}
           </TodoDayCheck>
-          <TodoDayDate 
-            $isSelected={fullDate === selectedDate}
-          >
-            {date}
-          </TodoDayDate>
+          <TodoDayDate selected={fullDate === selectedDate}>{date}</TodoDayDate>
         </>
       )}
     </TodoDayContainer>
-  )
-};
+  );
+}
+
+export interface CalendarDate {
+  fullDate: string;
+  date: number | null;
+  remains: number;
+  length: number;
+}
 
 const Calendar = () => {
-  const todos = useTodoState();
+  const todoList = useTodoListStore((state) => state.todoList);
   const currentDate = new Date();
-  const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-  const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+  const firstDay = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    1
+  );
+  const lastDay = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() + 1,
+    0
+  );
   const firstDayOfWeek = firstDay.getDay();
 
-  const calendarDates = [];
-  console.log('firstDay', firstDay);
-  console.log('lastDay', lastDay);
+  const calendarDates: CalendarDate[] = [];
+
   for (let i = 2 - firstDayOfWeek; i <= lastDay.getDate(); i++) {
     if (i > 0) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+      const date = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        i
+      );
       const dateString = date.toLocaleDateString();
-      const targetTodos = todos.find(todo => todo.date === dateString);
-
-      console.log(targetTodos);
+      const targetTodos = todoList.find((todo) => todo.date === dateString);
 
       let remains = 0;
       let length = 0;
       // TODO: targetTodos.todos.length > 0
       if (targetTodos) {
-        remains = targetTodos.todos.filter(todo => !todo.done).length;
+        remains = targetTodos.todos.filter((todo) => !todo.done).length;
         length = targetTodos.todos.length;
       }
-      console.log(remains);
       calendarDates.push({
         fullDate: dateString,
         date: i,
         remains: remains, // TODO: null 이면 숫자 X
-        length: length
+        length: length,
       });
     } else {
-      calendarDates.push({fullDate: '', date: '', remains: 0, length: 0});
+      calendarDates.push({ fullDate: '', date: null, remains: 0, length: 0 });
     }
   }
 
@@ -161,11 +163,11 @@ const Calendar = () => {
       </CalendarDay>
       <CalendarGrid>
         {calendarDates.map((day, index) => (
-          <TodoDay 
-            key={index} 
-            fullDate = {day.fullDate}
-            date={day.date} 
-            remains={day.remains} 
+          <TodoDay
+            key={index}
+            fullDate={day.fullDate}
+            date={day.date}
+            remains={day.remains}
             length={day.length}
           />
         ))}
