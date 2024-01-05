@@ -26,15 +26,11 @@ type TodoListStore = {
 export const useTodoListStore = create<TodoListStore>((set) => ({
   todoList: todoData,
   selectedDate: new Date().toLocaleDateString(),
-  setDate: (date) =>
-    set((state) => ({
-      ...state,
-      selectedDate: date,
-    })),
+  setDate: (date) => set((state) => ({ ...state, selectedDate: date })),
   addTodo: (todo) =>
     set((state) => {
       const selected = state.todoList.find(
-        (data) => data.date === state.selectedDate
+        (data) => data.date === state.selectedDate,
       );
       if (selected) {
         return {
@@ -49,18 +45,17 @@ export const useTodoListStore = create<TodoListStore>((set) => ({
             return data;
           }),
         };
-      } else {
-        return {
-          ...state,
-          todoList: [
-            ...state.todoList,
-            {
-              date: state.selectedDate,
-              todos: [{ id: uuid(), done: false, ...todo }],
-            },
-          ],
-        };
       }
+      return {
+        ...state,
+        todoList: [
+          ...state.todoList,
+          {
+            date: state.selectedDate,
+            todos: [{ id: uuid(), done: false, ...todo }],
+          },
+        ],
+      };
     }),
   toggleTodo: (id) =>
     set((state) => ({
@@ -68,7 +63,7 @@ export const useTodoListStore = create<TodoListStore>((set) => ({
       todoList: state.todoList.map((data) => ({
         ...data,
         todos: data.todos.map((todo) =>
-          todo.id === id ? { ...todo, done: !todo.done } : todo
+          todo.id === id ? { ...todo, done: !todo.done } : todo,
         ),
       })),
     })),

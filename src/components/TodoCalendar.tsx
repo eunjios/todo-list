@@ -45,13 +45,12 @@ function TodoCalendar() {
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
+  const text = `${year}년 ${month}월`;
   return (
     <>
       <CalendarHeadContainer>
         <CalendarInfo>
-          <CalendarDate>
-            {year}년 {month}월
-          </CalendarDate>
+          <CalendarDate>{text}</CalendarDate>
           <CalendarDone>
             <MdCheckBox color="#8F8F8F" />
             <span>27</span>

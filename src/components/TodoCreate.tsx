@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { keyframes, styled } from 'styled-components';
 import { useTodoListStore } from '../store/todo';
+import { NewTodo } from '../types';
 
 const fadeIn = keyframes`
   from {
@@ -8,15 +9,6 @@ const fadeIn = keyframes`
   }
   to {
     opacity: 0.8;
-  }
-`;
-
-const fadeOut = keyframes`
-  from {
-    opacity: 0.8;
-  }
-  to {
-    opacity: 0;
   }
 `;
 
@@ -61,13 +53,21 @@ const Input = styled.input`
   line-height: normal;
 `;
 
-function TodoCreate({ newTodo, setNewTodo, color }) {
+interface TodoCreateProps {
+  newTodo: NewTodo;
+  setNewTodo: (todo: NewTodo) => void;
+  color: string;
+}
+
+function TodoCreate({ newTodo, setNewTodo, color }: TodoCreateProps) {
   const [value, setValue] = useState('');
 
   const addTodo = useTodoListStore((state) => state.addTodo);
 
-  const onChange = (e) => setValue(e.target.value);
-  const onSubmit = (e) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     addTodo({ cateId: newTodo.cateId, text: value });
     setNewTodo({ selectedDate: '', cateId: 0 });
