@@ -4,6 +4,7 @@ import { BsBoxFill, BsFillPlusCircleFill } from 'react-icons/bs';
 import TodoItem from './TodoItem';
 import TodoCreate from './TodoCreate';
 import { useTodoListStore } from '../store/todo';
+import { NewTodo } from '../types';
 
 const TodoListContainer = styled.div`
   display: flex;
@@ -36,7 +37,17 @@ const TodoCategory = styled.div`
   color: ${(props) => props.color};
 `;
 
-function TodoCategoryButton({ title, color, onClick }) {
+interface TodoCategoryButtonProps {
+  title: string;
+  color: string;
+  onClick: () => void;
+}
+
+function TodoCategoryButton({
+  title,
+  color,
+  onClick,
+}: TodoCategoryButtonProps) {
   return (
     <TodoCategoryContainer>
       <TodoCategoryBlock onClick={onClick}>
@@ -67,51 +78,52 @@ function TodoList() {
     },
   ];
 
-  const [newTodo, setNewTodo] = useState({ selectedDate: '', cateId: 0 });
+  const [newTodo, setNewTodo] = useState<NewTodo>({
+    selectedDate: '',
+    cateId: 0,
+  });
   const todoList = useTodoListStore((state) => state.todoList);
   const selectedDate = useTodoListStore((state) => state.selectedDate);
   const targetData = todoList.find((data) => data.date === selectedDate);
 
-  const addTodo = (selectedDate: string, cateId: number) => {
-    setNewTodo({ selectedDate, cateId });
+  const addTodo = (date: string, cateId: number) => {
+    setNewTodo({ selectedDate: date, cateId });
   };
 
   return (
     <TodoListContainer>
-      {categories.map((category) => {
-        return (
-          <React.Fragment key={category.id}>
-            {/* 카테고리 제목 */}
-            <TodoCategoryButton
-              onClick={() => addTodo(selectedDate, category.id)}
-              title={category.name}
-              color={category.color}
-            />
-            {/* 카테고리에 해당하는 투두리스트 */}
-            {targetData &&
-              targetData.todos
-                .filter((todo) => todo.cateId === category.id)
-                .map((todo) => (
-                  <TodoItem
-                    key={todo.id}
-                    id={todo.id}
-                    text={todo.text}
-                    done={todo.done}
-                    color={category.color}
-                  />
-                ))}
-            {/* 카테고리 제목에 해당하는 새로운 투두 만드는 input */}
-            {newTodo.selectedDate === selectedDate &&
-              newTodo.cateId === category.id && (
-                <TodoCreate
-                  newTodo={newTodo}
-                  setNewTodo={setNewTodo}
+      {categories.map((category) => (
+        <React.Fragment key={category.id}>
+          {/* 카테고리 제목 */}
+          <TodoCategoryButton
+            onClick={() => addTodo(selectedDate, category.id)}
+            title={category.name}
+            color={category.color}
+          />
+          {/* 카테고리에 해당하는 투두리스트 */}
+          {targetData &&
+            targetData.todos
+              .filter((todo) => todo.cateId === category.id)
+              .map((todo) => (
+                <TodoItem
+                  key={todo.id}
+                  id={todo.id}
+                  text={todo.text}
+                  done={todo.done}
                   color={category.color}
                 />
-              )}
-          </React.Fragment>
-        );
-      })}
+              ))}
+          {/* 카테고리 제목에 해당하는 새로운 투두 만드는 input */}
+          {newTodo.selectedDate === selectedDate &&
+            newTodo.cateId === category.id && (
+              <TodoCreate
+                newTodo={newTodo}
+                setNewTodo={setNewTodo}
+                color={category.color}
+              />
+            )}
+        </React.Fragment>
+      ))}
     </TodoListContainer>
   );
 }

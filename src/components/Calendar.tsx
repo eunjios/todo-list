@@ -74,7 +74,14 @@ const TodoDayDate = styled.div<{ selected: boolean }>`
   background-color: ${(props) => (props.selected ? '#5983FC' : '#FFF')};
 `;
 
-function TodoDay({ fullDate, date, remains, length }) {
+export interface CalendarDate {
+  fullDate: string;
+  date: string | null;
+  remains: number;
+  length: number;
+}
+
+function TodoDay({ fullDate, date, remains, length }: CalendarDate) {
   const setDate = useTodoListStore((state) => state.setDate);
   const selectedDate = useTodoListStore((state) => state.selectedDate);
 
@@ -102,36 +109,29 @@ function TodoDay({ fullDate, date, remains, length }) {
   );
 }
 
-export interface CalendarDate {
-  fullDate: string;
-  date: number | null;
-  remains: number;
-  length: number;
-}
-
-const Calendar = () => {
+function Calendar() {
   const todoList = useTodoListStore((state) => state.todoList);
   const currentDate = new Date();
   const firstDay = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
-    1
+    1,
   );
   const lastDay = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
-    0
+    0,
   );
   const firstDayOfWeek = firstDay.getDay();
 
   const calendarDates: CalendarDate[] = [];
 
-  for (let i = 2 - firstDayOfWeek; i <= lastDay.getDate(); i++) {
+  for (let i = 2 - firstDayOfWeek; i <= lastDay.getDate(); i += 1) {
     if (i > 0) {
       const date = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth(),
-        i
+        i,
       );
       const dateString = date.toLocaleDateString();
       const targetTodos = todoList.find((todo) => todo.date === dateString);
@@ -145,26 +145,31 @@ const Calendar = () => {
       }
       calendarDates.push({
         fullDate: dateString,
-        date: i,
-        remains: remains, // TODO: null 이면 숫자 X
-        length: length,
+        date: i.toString(),
+        remains, // TODO: null 이면 숫자 X
+        length,
       });
     } else {
-      calendarDates.push({ fullDate: '', date: null, remains: 0, length: 0 });
+      calendarDates.push({
+        fullDate: '',
+        date: null,
+        remains: 0,
+        length: 0,
+      });
     }
   }
 
   return (
     <CalendarContainer>
       <CalendarDay>
-        {days.map((day, index) => (
-          <div key={index}>{day}</div>
+        {days.map((day) => (
+          <div key={day}>{day}</div>
         ))}
       </CalendarDay>
       <CalendarGrid>
-        {calendarDates.map((day, index) => (
+        {calendarDates.map((day) => (
           <TodoDay
-            key={index}
+            key={day.date}
             fullDate={day.fullDate}
             date={day.date}
             remains={day.remains}
@@ -174,6 +179,6 @@ const Calendar = () => {
       </CalendarGrid>
     </CalendarContainer>
   );
-};
+}
 
 export default React.memo(Calendar);

@@ -32,7 +32,14 @@ const Text = styled.div`
   line-height: normal;
 `;
 
-function TodoItem({ id, done, color, text }) {
+interface TodoItemProps {
+  id: string;
+  done: boolean;
+  color: string;
+  text: string;
+}
+
+function TodoItem({ id, done, color, text }: TodoItemProps) {
   const toggleTodo = useTodoListStore((state) => state.toggleTodo);
   const onToggle = () => toggleTodo(id);
   return (
